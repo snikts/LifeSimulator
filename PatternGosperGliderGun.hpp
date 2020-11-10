@@ -30,7 +30,7 @@ class PatternGosperGliderGun : public Pattern
         return max;
     }
     virtual std::uint8_t getSizeY() const override { return grid.size(); }
-    virtual bool getCell(std::uint8_t x, std::uint8_t y)
+    virtual bool getCell(std::uint8_t x, std::uint8_t y) const override
     {
         if (x < getSizeX() || y < getSizeY())
         {

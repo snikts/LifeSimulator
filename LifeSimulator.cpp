@@ -25,6 +25,8 @@ void LifeSimulator::insertPattern(const Pattern& pattern, std::uint8_t startX, s
             }
         }
     }
+
+
 }
 
 void LifeSimulator::update()
@@ -33,12 +35,12 @@ void LifeSimulator::update()
     {
         for (int j = 0; j < x; ++j)
         {
-            // if cell (i, j) is alive
+            // if cell (j, i) is alive
             if (getCell(j, i))
             {
                 int neighbors = 0;
                 // check cells:
-                //(i+1, j)
+                //(j+1, i)
                 if (j + 1 < x)
                 {
                     bool right = getCell(j + 1, i);
@@ -47,8 +49,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i-1, j)
-                if (j - 1 > 0)
+                //(j-1, i)
+                if (j - 1 >= 0)
                 {
                     bool left = getCell(j - 1, i);
                     if (left)
@@ -56,7 +58,7 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i+1, j+1)
+                //ji+1, i+1)
                 if (j + 1 < x && i + 1 < y)
                 {
                     bool bottomRight = getCell(j + 1, i + 1);
@@ -65,7 +67,7 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i, j+1)
+                //(j, i+1)
                 if (i + 1 < y)
                 {
                     bool bottom = getCell(j, i + 1);
@@ -74,8 +76,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i-1, j+1)
-                if (j - 1 > 0 && i + 1 < y)
+                //(j-1, i+1)
+                if (j - 1 >= 0 && i + 1 < y)
                 {
                     bool bottomLeft = getCell(j - 1, i + 1);
                     if (bottomLeft)
@@ -83,8 +85,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i+1, j-1)
-                if (j + 1 < x && i - 1 > 0)
+                //(j+1, i-1)
+                if (j + 1 < x && i - 1 >= 0)
                 {
                     bool topRight = getCell(j + 1, i - 1);
                     if (topRight)
@@ -92,8 +94,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i, j-1)
-                if (i - 1 > 0)
+                //(j, i-1)
+                if (i - 1 >= 0)
                 {
                     bool top = getCell(j, i - 1);
                     if (top)
@@ -101,8 +103,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i-1, j-1)
-                if (j - 1 > 0 && i - 1 > 0)
+                //(j-1, i-1)
+                if (j - 1 >= 0 && i - 1 >= 0)
                 {
                     bool topLeft = getCell(j - 1, i - 1);
                     if (topLeft)
@@ -116,12 +118,14 @@ void LifeSimulator::update()
                 {
                     //kill current cell
                     grid[j][i] = ' ';
+                    std::cout << "cell (" << j << ", " << i << ") died" << std::endl;
                 }
                 //if less than 2 of these cells are alive
                 if (neighbors < 2)
                 {
                     //kill current cell
                     grid[j][i] = ' ';
+                    std::cout << "cell (" << j << ", " << i << ") died" << std::endl;
                 }
             }
             // if cell (i, j) is dead
@@ -129,7 +133,7 @@ void LifeSimulator::update()
             {
                 int neighbors = 0;
                 // check cells:
-                //(i+1, j)
+                //(j+1, i)
                 if (j + 1 < x)
                 {
                     bool right = getCell(j + 1, i);
@@ -138,8 +142,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i-1, j)
-                if (j - 1 > 0)
+                //(j-1, i)
+                if (j - 1 >= 0)
                 {
                     bool left = getCell(j - 1, i);
                     if (left)
@@ -147,7 +151,7 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i+1, j+1)
+                //(j+1, i+1)
                 if (j + 1 < x && i + 1 < y)
                 {
                     bool bottomRight = getCell(j + 1, i + 1);
@@ -156,7 +160,7 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i, j+1)
+                //(j, i+1)
                 if (i + 1 < y)
                 {
                     bool bottom = getCell(j, i + 1);
@@ -165,8 +169,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i-1, j+1)
-                if (j - 1 > 0 && i + 1 < y)
+                //(j-1, i+1)
+                if (j - 1 >= 0 && i + 1 < y)
                 {
                     bool bottomLeft = getCell(j - 1, i + 1);
                     if (bottomLeft)
@@ -174,8 +178,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i+1, j-1)
-                if (j + 1 < x && i - 1 > 0)
+                //(j+1, i-1)
+                if (j + 1 < x && i - 1 >= 0)
                 {
                     bool topRight = getCell(j + 1, i - 1);
                     if (topRight)
@@ -183,8 +187,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i, j-1)
-                if (i - 1 > 0)
+                //(j, i-1)
+                if (i - 1 >= 0)
                 {
                     bool top = getCell(j, i - 1);
                     if (top)
@@ -192,8 +196,8 @@ void LifeSimulator::update()
                         neighbors = neighbors + 1;
                     }
                 }
-                //(i-1, j-1)
-                if (j - 1 > 0 && i - 1 > 0)
+                //(j-1, i-1)
+                if (j - 1 >= 0 && i - 1 >= 0)
                 {
                     bool topLeft = getCell(j - 1, i - 1);
                     if (topLeft)
@@ -206,6 +210,7 @@ void LifeSimulator::update()
                 if (neighbors == 3)
                 {
                     grid[j][i] = '*';
+                    std::cout << "cell (" << j << ", " << i << ") died" << std::endl;
                 }
             }
         }
