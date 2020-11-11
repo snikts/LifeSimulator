@@ -29,8 +29,94 @@ void LifeSimulator::insertPattern(const Pattern& pattern, std::uint8_t startX, s
 
 }
 
+int LifeSimulator::tallyNeighbors(int x, int y) {
+    int neighbors = 0;
+
+    bool top = false;
+    bool topLeft = false;
+    bool topRight = false;
+    bool left = false;
+    bool right = false;
+    bool bottom = false;
+    bool bottomLeft = false;
+    bool bottomRight = false;
+
+    if (y - 1 >= 0)
+    {
+        top = getCell(x, y - 1);
+        if (x - 1 >= 0)
+        {
+            topLeft = getCell(x - 1, y - 1);
+        }
+        if (x + 1 < getSizeX())
+        {
+            topRight = getCell(x + 1, y - 1);
+        }
+    }
+
+    if (x - 1 >= 0)
+    {
+        left = getCell(x - 1, y);
+    }
+    if (x + 1 < getSizeX())
+    {
+        right = getCell(x + 1, y);
+    }
+
+    if (y + 1 < getSizeY())
+    {
+        bottom = getCell(x, y + 1);
+        if (x - 1 >= 0)
+        {
+            bottomLeft = getCell(x - 1, y + 1);
+        }
+        if (x + 1 < getSizeX()) {
+            bottomRight = getCell(x + 1, y + 1);
+        }
+        
+    }
+
+
+    if (topLeft)
+    {
+        neighbors = neighbors + 1;
+    }
+    if (top)
+    {
+        neighbors = neighbors + 1;
+    }
+    if (topRight)
+    {
+        neighbors = neighbors + 1;
+    }
+    if (left)
+    {
+        neighbors = neighbors + 1;
+    }
+    if (right)
+    {
+        neighbors = neighbors + 1;
+    }
+    if (bottomLeft)
+    {
+        neighbors = neighbors + 1;
+    }
+    if (bottom)
+    {
+        neighbors = neighbors + 1;
+    }
+    if (bottomRight)
+    {
+        neighbors = neighbors + 1;
+    }
+    //std::cout << "cell (" << x << ", " << y << ") has " << neighbors << "neighbors" << std::endl;
+    return neighbors;
+
+}
+
 void LifeSimulator::update()
 {
+    std::vector<std::vector<char>> newGrid = grid;
     for (int i = 0; i < y; ++i)
     {
         for (int j = 0; j < x; ++j)
@@ -38,183 +124,35 @@ void LifeSimulator::update()
             // if cell (j, i) is alive
             if (getCell(j, i))
             {
-                int neighbors = 0;
-                // check cells:
-                //(j+1, i)
-                if (j + 1 < x)
-                {
-                    bool right = getCell(j + 1, i);
-                    if (right)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j-1, i)
-                if (j - 1 >= 0)
-                {
-                    bool left = getCell(j - 1, i);
-                    if (left)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //ji+1, i+1)
-                if (j + 1 < x && i + 1 < y)
-                {
-                    bool bottomRight = getCell(j + 1, i + 1);
-                    if (bottomRight)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j, i+1)
-                if (i + 1 < y)
-                {
-                    bool bottom = getCell(j, i + 1);
-                    if (bottom)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j-1, i+1)
-                if (j - 1 >= 0 && i + 1 < y)
-                {
-                    bool bottomLeft = getCell(j - 1, i + 1);
-                    if (bottomLeft)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j+1, i-1)
-                if (j + 1 < x && i - 1 >= 0)
-                {
-                    bool topRight = getCell(j + 1, i - 1);
-                    if (topRight)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j, i-1)
-                if (i - 1 >= 0)
-                {
-                    bool top = getCell(j, i - 1);
-                    if (top)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j-1, i-1)
-                if (j - 1 >= 0 && i - 1 >= 0)
-                {
-                    bool topLeft = getCell(j - 1, i - 1);
-                    if (topLeft)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
+                int neighbors = tallyNeighbors(j, i);
 
-                //if more than three of these cells are alive
-                if (neighbors > 3)
-                {
-                    //kill current cell
-                    grid[j][i] = ' ';
-                    std::cout << "cell (" << j << ", " << i << ") died" << std::endl;
+                if (neighbors == 2 || neighbors == 3) {
+                    newGrid[i][j] = '*';
                 }
-                //if less than 2 of these cells are alive
                 if (neighbors < 2)
                 {
-                    //kill current cell
-                    grid[j][i] = ' ';
-                    std::cout << "cell (" << j << ", " << i << ") died" << std::endl;
+                    newGrid[i][j] = ' ';
+                }
+                if (neighbors > 3)
+                {
+                    newGrid[i][j] = ' ';
                 }
             }
-            // if cell (i, j) is dead
+            // if cell (j, i) is dead
             else
             {
-                int neighbors = 0;
-                // check cells:
-                //(j+1, i)
-                if (j + 1 < x)
-                {
-                    bool right = getCell(j + 1, i);
-                    if (right)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j-1, i)
-                if (j - 1 >= 0)
-                {
-                    bool left = getCell(j - 1, i);
-                    if (left)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j+1, i+1)
-                if (j + 1 < x && i + 1 < y)
-                {
-                    bool bottomRight = getCell(j + 1, i + 1);
-                    if (bottomRight)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j, i+1)
-                if (i + 1 < y)
-                {
-                    bool bottom = getCell(j, i + 1);
-                    if (bottom)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j-1, i+1)
-                if (j - 1 >= 0 && i + 1 < y)
-                {
-                    bool bottomLeft = getCell(j - 1, i + 1);
-                    if (bottomLeft)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j+1, i-1)
-                if (j + 1 < x && i - 1 >= 0)
-                {
-                    bool topRight = getCell(j + 1, i - 1);
-                    if (topRight)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j, i-1)
-                if (i - 1 >= 0)
-                {
-                    bool top = getCell(j, i - 1);
-                    if (top)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
-                //(j-1, i-1)
-                if (j - 1 >= 0 && i - 1 >= 0)
-                {
-                    bool topLeft = getCell(j - 1, i - 1);
-                    if (topLeft)
-                    {
-                        neighbors = neighbors + 1;
-                    }
-                }
+                int neighbors = tallyNeighbors(j, i);
 
                 //if three of these cells are alive, make current cell alive
                 if (neighbors == 3)
                 {
-                    grid[j][i] = '*';
-                    std::cout << "cell (" << j << ", " << i << ") died" << std::endl;
+                    newGrid[i][j] = '*';
+                    //std::cout << "cell (" << j << ", " << i << ") died" << std::endl;
                 }
             }
         }
     }
+    grid = newGrid;
 }
 
 std::uint8_t LifeSimulator::getSizeX() const
@@ -229,19 +167,15 @@ std::uint8_t LifeSimulator::getSizeY() const
 
 bool LifeSimulator::getCell(std::uint8_t x, std::uint8_t y) const
 {
-    if (x < LifeSimulator::x && y < LifeSimulator::y)
+
+    if (grid[y][x] == '*')
     {
-        if (grid[y][x] == '*')
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
     }
     else
     {
         return false;
     }
+
+
 }

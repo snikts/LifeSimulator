@@ -20,4 +20,5 @@ class LifeSimulator
     std::uint8_t x;
     std::uint8_t y;
     std::vector<std::vector<char>> grid;
+    int tallyNeighbors(int x, int y);
 };
